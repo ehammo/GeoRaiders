@@ -1,0 +1,66 @@
+Initialize engine version: 5.4.2f2 (b7e030c65c9b)
+GfxDevice: creating device client; threaded=1
+Direct3D:
+    Version:  Direct3D 11.0 [level 11.0]
+    Renderer: Intel(R) HD Graphics 5500 (ID=0x1616)
+    Vendor:   Intel
+    VRAM:     1130 MB
+Begin MonoManager ReloadAssembly
+Platform assembly: C:\Users\eduar\Documents\jogos2D\GeoRaiders_1.0\test_Data\Managed\UnityEngine.dll (this message is harmless)
+Loading C:\Users\eduar\Documents\jogos2D\GeoRaiders_1.0\test_Data\Managed\UnityEngine.dll into Unity Child Domain
+Platform assembly: C:\Users\eduar\Documents\jogos2D\GeoRaiders_1.0\test_Data\Managed\Assembly-CSharp.dll (this message is harmless)
+Loading C:\Users\eduar\Documents\jogos2D\GeoRaiders_1.0\test_Data\Managed\Assembly-CSharp.dll into Unity Child Domain
+Platform assembly: C:\Users\eduar\Documents\jogos2D\GeoRaiders_1.0\test_Data\Managed\Assembly-UnityScript.dll (this message is harmless)
+Loading C:\Users\eduar\Documents\jogos2D\GeoRaiders_1.0\test_Data\Managed\Assembly-UnityScript.dll into Unity Child Domain
+Platform assembly: C:\Users\eduar\Documents\jogos2D\GeoRaiders_1.0\test_Data\Managed\UnityEngine.UI.dll (this message is harmless)
+Loading C:\Users\eduar\Documents\jogos2D\GeoRaiders_1.0\test_Data\Managed\UnityEngine.UI.dll into Unity Child Domain
+Platform assembly: C:\Users\eduar\Documents\jogos2D\GeoRaiders_1.0\test_Data\Managed\UnityEngine.Networking.dll (this message is harmless)
+Loading C:\Users\eduar\Documents\jogos2D\GeoRaiders_1.0\test_Data\Managed\UnityEngine.Networking.dll into Unity Child Domain
+Platform assembly: C:\Users\eduar\Documents\jogos2D\GeoRaiders_1.0\test_Data\Managed\Triangulation.dll (this message is harmless)
+Loading C:\Users\eduar\Documents\jogos2D\GeoRaiders_1.0\test_Data\Managed\Triangulation.dll into Unity Child Domain
+- Completed reload, in  0.199 seconds
+Platform assembly: C:\Users\eduar\Documents\jogos2D\GeoRaiders_1.0\test_Data\Managed\System.Core.dll (this message is harmless)
+Platform assembly: C:\Users\eduar\Documents\jogos2D\GeoRaiders_1.0\test_Data\Managed\System.dll (this message is harmless)
+OnLevelWasLoaded was found on TypedMonoBehaviour
+This message has been deprecated and will be removed in a later version of Unity.
+Add a delegate to SceneManager.sceneLoaded instead to get notifications after scene loading has completed
+ 
+(Filename:  Line: 375)
+
+OnLevelWasLoaded was found on ObservableMonoBehaviour
+This message has been deprecated and will be removed in a later version of Unity.
+Add a delegate to SceneManager.sceneLoaded instead to get notifications after scene loading has completed
+ 
+(Filename:  Line: 375)
+
+desktop: 1366x768 60Hz; virtual: 1366x768 at 0,0
+<RI> Initializing input.
+<RI> Input initialized.
+<RI> Initialized touch support.
+UnloadTime: 2.710553 ms
+Unloading 5 Unused Serialized files (Serialized files now loaded: 0)
+UnloadTime: 3.648283 ms
+
+Unloading 130 unused Assets to reduce memory usage. Loaded Objects now: 1222.
+Total: 1.990693 ms (FindLiveObjects: 0.150689 ms CreateObjectMapping: 0.118499 ms MarkObjects: 1.246574 ms  DeleteObjects: 0.460000 ms)
+
+Setting up 1 worker threads for Enlighten.
+  Thread -> id: 28d8 -> priority: 1 
+Unloading 4 Unused Serialized files (Serialized files now loaded: 0)
+UnloadTime: 21.659231 ms
+
+Unloading 4 unused Assets to reduce memory usage. Loaded Objects now: 1224.
+Total: 1.374870 ms (FindLiveObjects: 0.142292 ms CreateObjectMapping: 0.109635 ms MarkObjects: 1.079089 ms  DeleteObjects: 0.041987 ms)
+
+Unloading 4 Unused Serialized files (Serialized files now loaded: 0)
+UnloadTime: 2.679295 ms
+
+Unloading 4 unused Assets to reduce memory usage. Loaded Objects now: 1224.
+Total: 1.495702 ms (FindLiveObjects: 0.240264 ms CreateObjectMapping: 0.200142 ms MarkObjects: 1.013774 ms  DeleteObjects: 0.039188 ms)
+
+Unloading 4 Unused Serialized files (Serialized files now loaded: 0)
+UnloadTime: 3.634753 ms
+
+Unloading 4 unused Assets to reduce memory usage. Loaded Objects now: 1224.
+Total: 1.322152 ms (FindLiveObjects: 0.145091 ms CreateObjectMapping: 0.102637 ms MarkObjects: 1.037567 ms  DeleteObjects: 0.035922 ms)
+

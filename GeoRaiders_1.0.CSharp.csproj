@@ -124,6 +124,7 @@
     <Compile Include="Assets\MapzenGo\Models\Settings\SerializableDictionary\SerializableDictionaryPropertyDrawer.cs" />
     <Compile Include="Assets\MapzenGo\Models\Settings\WaterFactorySettings.cs" />
     <Compile Include="Assets\MapzenGo\Models\SpawnGameObjects.cs" />
+    <Compile Include="Assets\MapzenGo\Models\TestLocationService.cs" />
     <Compile Include="Assets\MapzenGo\Models\Tile.cs" />
     <Compile Include="Assets\MapzenGo\Models\TileManager.cs" />
     <Compile Include="Assets\MapzenGo\Models\Water.cs" />
