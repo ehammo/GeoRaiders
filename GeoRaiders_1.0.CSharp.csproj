@@ -123,6 +123,7 @@
     <Compile Include="Assets\MapzenGo\Models\Settings\SerializableDictionary\SerializableDictionary.cs" />
     <Compile Include="Assets\MapzenGo\Models\Settings\SerializableDictionary\SerializableDictionaryPropertyDrawer.cs" />
     <Compile Include="Assets\MapzenGo\Models\Settings\WaterFactorySettings.cs" />
+    <Compile Include="Assets\MapzenGo\Models\SpawnGameObjects.cs" />
     <Compile Include="Assets\MapzenGo\Models\Tile.cs" />
     <Compile Include="Assets\MapzenGo\Models\TileManager.cs" />
     <Compile Include="Assets\MapzenGo\Models\Water.cs" />
@@ -345,6 +346,8 @@
     <Compile Include="Assets\MapzenGo\Standard Assets\Characters\ThirdPersonCharacter\Scripts\AICharacterControl.cs" />
     <Compile Include="Assets\MapzenGo\Standard Assets\Characters\ThirdPersonCharacter\Scripts\ThirdPersonCharacter.cs" />
     <Compile Include="Assets\MapzenGo\Standard Assets\Characters\ThirdPersonCharacter\Scripts\ThirdPersonUserControl.cs" />
+    <Compile Include="Assets\SkeletonBehavior.cs" />
+    <Compile Include="Assets\TransformFollower.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\MapzenGo\Plugins\Triangulation.txt" />
