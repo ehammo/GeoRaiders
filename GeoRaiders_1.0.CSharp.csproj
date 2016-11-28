@@ -66,6 +66,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Assets\ButtonController.cs" />
     <Compile Include="Assets\MapzenGo\Helpers\Billboard.cs" />
     <Compile Include="Assets\MapzenGo\Helpers\Extensions.cs" />
     <Compile Include="Assets\MapzenGo\Helpers\GeoConverter.cs" />

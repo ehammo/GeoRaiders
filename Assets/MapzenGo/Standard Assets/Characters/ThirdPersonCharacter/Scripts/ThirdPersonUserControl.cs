@@ -12,10 +12,14 @@ namespace UnityStandardAssets.Characters.ThirdPerson
         private Vector3 m_CamForward;             // The current forward direction of the camera
         private Vector3 m_Move;
         private bool m_Jump = false;                      // the world-relative desired move direction, calculated from the camForward and user input.
-        private bool turno = true;
-        private bool battle = false;
+        public bool turno = true;
+        public bool battle = false;
         private float hp;
-        private int mana;
+        public float mana;
+        private int[] randomSkill = { 1, 1, 1, 2, 1, 1, 2, 1, 1 };
+        public SkeletonBehavior EnemyScript;
+        private GameObject healthBar;
+        private GameObject ManaBar;
 
         private int[] battleSkill;
 
@@ -35,6 +39,10 @@ namespace UnityStandardAssets.Characters.ThirdPerson
 
             // get the third person character ( this should never be null due to require component )
             m_Character = GetComponent<ThirdPersonCharacter>();
+
+            mana = 50f;
+            hp = 100f;
+            if (battle) healthBar = (gameObject.transform.FindChild("EnemyHealth").FindChild("EnemyLife")).gameObject;
         }
 
 
@@ -44,6 +52,41 @@ namespace UnityStandardAssets.Characters.ThirdPerson
             {
                 m_Jump = Input.GetButtonDown("Jump");
             }
+            if (battle)
+            {
+                if (healthBar == null||ManaBar==null)
+                {
+                    healthBar = (Camera.main.transform.FindChild("Canvas").FindChild("PlayerHealth").FindChild("PlayerLife")).gameObject;
+                    ManaBar = (Camera.main.transform.FindChild("Canvas").FindChild("PlayerMana").FindChild("PlayerMana")).gameObject;
+                }
+                if (healthBar.transform.localScale.x * 100 != hp)
+                {
+                    Vector3 temp = healthBar.transform.localScale;
+                    temp.x = hp / 100f;
+                    if (hp / 100 < 0) temp.x = 0;
+                    healthBar.transform.localScale = temp;
+                }
+                if (ManaBar.transform.localScale.x * 50 != mana) {
+                    Vector3 temp = ManaBar.transform.localScale;
+                    temp.x = mana / 100f;
+                    if (mana / 100 < 0) temp.x = 0;
+                    ManaBar.transform.localScale = temp;
+                }
+
+                GameObject enemy = GameObject.FindGameObjectWithTag("Enemy");
+                EnemyScript = enemy.GetComponent<SkeletonBehavior>();
+
+                if (hp <= 0)
+                {
+                    //Aparecer voce perdeu de alguma forma
+                    battle = false;
+                    EnemyScript.battle = false;
+                    DestroyObject(this);
+                    Application.LoadLevel("DynamicLoader");
+                }
+                
+            }
+
         }
 
 
@@ -56,6 +99,16 @@ namespace UnityStandardAssets.Characters.ThirdPerson
         public void increaseHp(float val)
         {
             this.hp += val;
+        }
+
+        public void decreaseMana(float val)
+        {
+            this.mana -= val;
+        }
+
+        public void increaseMana(float val)
+        {
+            this.mana += val;
         }
 
         // Fixed update is called in sync with physics

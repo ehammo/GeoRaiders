@@ -4,9 +4,9 @@ using UnityStandardAssets.Characters.ThirdPerson;
 
 public class SkeletonBehavior : MonoBehaviour
 {
-    Animator animator;
+    public Animator animator;
     public bool battle = false;
-    private bool turno = false;
+    public bool turno = false;
     private float hp;
     private int mana;
     private int[] randomSkill = { 1, 1, 1, 2, 1, 1, 2, 1, 1 };
@@ -16,16 +16,31 @@ public class SkeletonBehavior : MonoBehaviour
     void Start()
     {
         animator = GetComponent<Animator>();
+        GameObject player = GameObject.FindGameObjectWithTag("Player");
+        PlayerScript = player.GetComponent<ThirdPersonUserControl>();
         mana = 50;
         hp = 100f;
         if(battle) healthBar = (gameObject.transform.FindChild("EnemyHealth").FindChild("EnemyLife")).gameObject;
     }
 
+    public void decreaseHp(float val)
+    {
+        this.hp -= val;
+    }
+
+    public void increaseHp(float val)
+    {
+        this.hp += val;
+    }
+
     // Update is called once per frame
     void Update()
     {
+       
         if (battle)
         {
+            if (healthBar == null) healthBar = (gameObject.transform.FindChild("EnemyHealth").FindChild("EnemyLife")).gameObject;
+
             if (healthBar.transform.localScale.x * 100 != hp)
             {
                 Vector3 temp = healthBar.transform.localScale;
@@ -35,12 +50,13 @@ public class SkeletonBehavior : MonoBehaviour
             }
 
             AnimatorStateInfo asi = animator.GetCurrentAnimatorStateInfo(0);
-            GameObject player = GameObject.FindGameObjectWithTag("Player");
-            PlayerScript = player.GetComponent<ThirdPersonUserControl>();
-
+            
             if (hp <= 0)
             {
                 animator.Play("Death");
+                battle = false;
+                PlayerScript.battle = false;
+                PlayerScript.turno = true;
                 DestroyObject(this);
                 Application.LoadLevel("DynamicLoader");
             }
@@ -52,6 +68,8 @@ public class SkeletonBehavior : MonoBehaviour
                     PlayerScript.decreaseHp(10);
                     animator.Play("Attack");
                     turno = false;
+                    PlayerScript.turno = true;
+                    PlayerScript.battle = true;
                 }
                 else
                 {
@@ -60,6 +78,8 @@ public class SkeletonBehavior : MonoBehaviour
                     {
                         PlayerScript.decreaseHp(10);
                         animator.Play("Attack");
+                        PlayerScript.turno = true;
+                        PlayerScript.battle = true;
                         turno = false;
                     }
                     else
@@ -67,6 +87,8 @@ public class SkeletonBehavior : MonoBehaviour
                         PlayerScript.decreaseHp(25);
                         animator.Play("Skill");
                         mana -= 25;
+                        PlayerScript.turno = true;
+                        PlayerScript.battle = true;
                         turno = false;
                     }
                 }
