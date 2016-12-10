@@ -1,5 +1,5 @@
 ﻿using UnityEngine;
-using System.Collections;
+using UnityEngine.UI;
 using UnityStandardAssets.Characters.ThirdPerson;
 
 public class SkeletonBehavior : MonoBehaviour
@@ -91,6 +91,8 @@ public class SkeletonBehavior : MonoBehaviour
                         turno = false;
                     }
                 }
+                Text turnText = (Camera.main.transform.FindChild("Canvas").FindChild("Turn").gameObject).GetComponent<Text>();
+                turnText.text = "Your Turn";
             }
 
             //animator.Play("Idle");

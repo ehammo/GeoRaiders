@@ -34,10 +34,11 @@ namespace UnityStandardAssets.Characters.ThirdPerson
 
 		float currentHealth = 100;
         public float currentMana = 50;
-		float currentDamage = 0;
+        public int currentDamage = 1;
 		float currentArmor = 0;
+        float testing = 0;
 
-		int normalSize = 3;
+        int normalSize = 3;
 
 		public GameObject inventory;
 		public GameObject characterSystem;
@@ -221,15 +222,19 @@ namespace UnityStandardAssets.Characters.ThirdPerson
 					maxArmor += item.itemAttributes[i].attributeValue;
 				if (item.itemAttributes[i].attributeName == "Damage")
 					maxDamage += item.itemAttributes[i].attributeValue;
-			}
-			//if (HPMANACanvas != null)
-			//{
-			//    UpdateManaBar();
-			//    UpdateHPBar();
-			//}
-		}
+            }
+            currentArmor = maxArmor;
+            currentMana = maxMana;
+            currentHealth = maxHealth;
+            currentDamage = maxDamage;
+            //if (HPMANACanvas != null)
+            //{
+            //    UpdateManaBar();
+            //    UpdateHPBar();
+            //}
+        }
 
-		public void OnUnEquipItem(Item item)
+        public void OnUnEquipItem(Item item)
 		{
 			for (int i = 0; i < item.itemAttributes.Count; i++)
 			{
@@ -285,6 +290,12 @@ namespace UnityStandardAssets.Characters.ThirdPerson
             {
                 m_Jump = Input.GetButtonDown("Jump");
             }
+
+            if (currentArmor != testing) {
+                print(currentArmor);
+                testing = currentArmor;
+            }
+
             if (battle)
             {
                 setLimits();
@@ -292,7 +303,7 @@ namespace UnityStandardAssets.Characters.ThirdPerson
                 float hp = currentHealth;
                 float mana = currentMana;
 
-                if (healthBar == null||ManaBar==null)
+                if (healthBar == null || ManaBar == null)
                 {
                     healthBar = (Camera.main.transform.FindChild("Canvas").FindChild("PlayerHealth").FindChild("PlayerLife")).gameObject;
                     ManaBar = (Camera.main.transform.FindChild("Canvas").FindChild("PlayerMana").FindChild("PlayerMana")).gameObject;
@@ -305,7 +316,8 @@ namespace UnityStandardAssets.Characters.ThirdPerson
                     if (hp / 100 < 0) temp.x = 0;
                     healthBar.transform.localScale = temp;
                 }
-                if (ManaBar.transform.localScale.x * 50 != mana) {
+                if (ManaBar.transform.localScale.x * 50 != mana)
+                {
                     Vector3 temp = ManaBar.transform.localScale;
                     temp.x = mana / 100f;
                     if (mana / 100 < 0) temp.x = 0;
@@ -323,31 +335,35 @@ namespace UnityStandardAssets.Characters.ThirdPerson
                     DestroyObject(this);
                     Application.LoadLevel("DynamicLoader");
                 }
-                
-            }
-			if (Input.GetKeyDown(inputManagerDatabase.CharacterSystemKeyCode) && !battle)
-			{
-				if (!characterSystem.activeSelf)
-				{
-					characterSystemInventory.openInventory();
-				}
-				else
-				{
-					characterSystemInventory.closeInventory();
-				}
-			}
 
-			if (Input.GetKeyDown(inputManagerDatabase.InventoryKeyCode) && !battle)
-			{
-				if (!inventory.activeSelf)
-				{
-					mainInventory.openInventory();
-				}
-				else
-				{
-					mainInventory.closeInventory();
-				}
-			}
+            }
+            else {
+                if (Input.GetKeyDown(inputManagerDatabase.CharacterSystemKeyCode))
+                {
+                    if (!characterSystem.activeSelf)
+                    {
+                        characterSystemInventory.openInventory();
+                    }
+                    else
+                    {
+                        characterSystemInventory.closeInventory();
+                    }
+                }
+
+                if (Input.GetKeyDown(inputManagerDatabase.InventoryKeyCode))
+                {
+                    if (!inventory.activeSelf)
+                    {
+                        mainInventory.openInventory();
+                    }
+                    else
+                    {
+                        mainInventory.closeInventory();
+                    }
+                }
+
+            }
+			
 
         }
 
@@ -357,24 +373,14 @@ namespace UnityStandardAssets.Characters.ThirdPerson
 
         public void decreaseHp(float val)
         {
-            print(val);
-            print(this.currentHealth);
-            print(this.currentArmor);
-
             if (currentArmor > val)
             {
-                print("if1");
                 this.currentArmor -= val;
             }
             else if(currentArmor<=val)
             {
-                print("if2");
-                print("sub: " + (val - currentArmor));
                 this.currentHealth -= (val - this.currentArmor);
                 this.currentArmor -= val;
-                print(currentHealth);
-
-
             }
         }
 

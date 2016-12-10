@@ -28,7 +28,8 @@ public class ButtonController : MonoBehaviour
 
         if (turn&&myButton.name == "Skill1Btn")
         {
-            EnemyScript.decreaseHp(10);
+            int damage = Random.Range(0, PlayerScript.currentDamage);
+            EnemyScript.decreaseHp(damage);
             EnemyScript.animator.Play("Damage");
             EnemyScript.turno = true;
             PlayerScript.turno = false;
@@ -40,6 +41,8 @@ public class ButtonController : MonoBehaviour
             EnemyScript.turno = true;
             PlayerScript.turno = false;
         }
+        Text turnText = (Camera.main.transform.FindChild("Canvas").FindChild("Turn").gameObject).GetComponent<Text>();
+        turnText.text = "His Turn";
     }
 
 }
