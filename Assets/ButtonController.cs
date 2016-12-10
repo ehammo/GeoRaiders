@@ -34,7 +34,7 @@ public class ButtonController : MonoBehaviour
             PlayerScript.turno = false;
             print("Turn: " + turn);
         }
-        else if (turn&&myButton.name == "Skill2Btn"&&PlayerScript.mana>=25) {
+        else if (turn&&myButton.name == "Skill2Btn"&&PlayerScript.currentMana>=25) {
             EnemyScript.decreaseHp(25);
             PlayerScript.decreaseMana(25);
             EnemyScript.turno = true;

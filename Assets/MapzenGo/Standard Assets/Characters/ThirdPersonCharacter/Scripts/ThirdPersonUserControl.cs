@@ -16,8 +16,7 @@ namespace UnityStandardAssets.Characters.ThirdPerson
         private bool m_Jump = false;                      // the world-relative desired move direction, calculated from the camForward and user input.
         public bool turno = true;
         public bool battle = false;
-        private float hp;
-        public float mana;
+
         private int[] randomSkill = { 1, 1, 1, 2, 1, 1, 2, 1, 1 };
         public SkeletonBehavior EnemyScript;
         private GameObject healthBar;
@@ -33,8 +32,8 @@ namespace UnityStandardAssets.Characters.ThirdPerson
 		float maxDamage = 0;
 		float maxArmor = 0;
 
-		public float currentHealth = 60;
-		float currentMana = 100;
+		float currentHealth = 100;
+        public float currentMana = 50;
 		float currentDamage = 0;
 		float currentArmor = 0;
 
@@ -79,7 +78,7 @@ namespace UnityStandardAssets.Characters.ThirdPerson
 		{
 			if (item.itemType == ItemType.Weapon)
 			{
-				//add the weapon if you unequip the weapon
+				//add the weapon if you equip the weapon
 			}
 		}
 
@@ -211,6 +210,7 @@ namespace UnityStandardAssets.Characters.ThirdPerson
 
 		public void OnGearItem(Item item)
 		{
+            print("ghue");
 			for (int i = 0; i < item.itemAttributes.Count; i++)
 			{
 				if (item.itemAttributes[i].attributeName == "Health")
@@ -267,11 +267,7 @@ namespace UnityStandardAssets.Characters.ThirdPerson
             // get the third person character ( this should never be null due to require component )
             m_Character = GetComponent<ThirdPersonCharacter>();
 
-            mana = 50f;
-            hp = 100f;
-
-
-			if (inputManagerDatabase == null)
+            if (inputManagerDatabase == null)
 				inputManagerDatabase = (InputManager)Resources.Load("InputManager");
 
 			if (inventory != null)
@@ -291,11 +287,17 @@ namespace UnityStandardAssets.Characters.ThirdPerson
             }
             if (battle)
             {
+                setLimits();
+
+                float hp = currentHealth;
+                float mana = currentMana;
+
                 if (healthBar == null||ManaBar==null)
                 {
                     healthBar = (Camera.main.transform.FindChild("Canvas").FindChild("PlayerHealth").FindChild("PlayerLife")).gameObject;
                     ManaBar = (Camera.main.transform.FindChild("Canvas").FindChild("PlayerMana").FindChild("PlayerMana")).gameObject;
                 }
+
                 if (healthBar.transform.localScale.x * 100 != hp)
                 {
                     Vector3 temp = healthBar.transform.localScale;
@@ -323,7 +325,7 @@ namespace UnityStandardAssets.Characters.ThirdPerson
                 }
                 
             }
-			if (Input.GetKeyDown(inputManagerDatabase.CharacterSystemKeyCode))
+			if (Input.GetKeyDown(inputManagerDatabase.CharacterSystemKeyCode) && !battle)
 			{
 				if (!characterSystem.activeSelf)
 				{
@@ -335,7 +337,7 @@ namespace UnityStandardAssets.Characters.ThirdPerson
 				}
 			}
 
-			if (Input.GetKeyDown(inputManagerDatabase.InventoryKeyCode))
+			if (Input.GetKeyDown(inputManagerDatabase.InventoryKeyCode) && !battle)
 			{
 				if (!inventory.activeSelf)
 				{
@@ -349,26 +351,46 @@ namespace UnityStandardAssets.Characters.ThirdPerson
 
         }
 
-
+        public void armourPiercing(float val) {
+            this.currentHealth -= val;
+        }
 
         public void decreaseHp(float val)
         {
-            this.hp -= val;
+            print(val);
+            print(this.currentHealth);
+            print(this.currentArmor);
+
+            if (currentArmor > val)
+            {
+                print("if1");
+                this.currentArmor -= val;
+            }
+            else if(currentArmor<=val)
+            {
+                print("if2");
+                print("sub: " + (val - currentArmor));
+                this.currentHealth -= (val - this.currentArmor);
+                this.currentArmor -= val;
+                print(currentHealth);
+
+
+            }
         }
 
         public void increaseHp(float val)
         {
-            this.hp += val;
+            this.currentHealth += val;
         }
 
         public void decreaseMana(float val)
         {
-            this.mana -= val;
+            this.currentMana -= val;
         }
 
         public void increaseMana(float val)
         {
-            this.mana += val;
+            this.currentMana += val;
         }
 
         // Fixed update is called in sync with physics
@@ -404,8 +426,24 @@ namespace UnityStandardAssets.Characters.ThirdPerson
             //          m_Cam.LookAt(m_Character.transform.position);
             m_Jump = false;
         }
+
+        void setLimits() {
+            if (this.currentMana > this.maxMana)
+            {
+                this.currentMana = this.maxMana;
+            }
+            if (this.currentHealth > this.maxHealth)
+            {
+                this.currentHealth = this.maxHealth;
+            }
+            if (this.currentMana < 0)
+            {
+                this.currentMana = 0;
+            }
+            if (this.currentHealth < 0)
+            {
+                this.currentHealth = 0;
+            }
+        }
     }
-
-
-
 }

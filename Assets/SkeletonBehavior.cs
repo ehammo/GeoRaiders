@@ -20,7 +20,6 @@ public class SkeletonBehavior : MonoBehaviour
         PlayerScript = player.GetComponent<ThirdPersonUserControl>();
         mana = 50;
         hp = 100f;
-        if(battle) healthBar = (gameObject.transform.FindChild("EnemyHealth").FindChild("EnemyLife")).gameObject;
     }
 
     public void decreaseHp(float val)
