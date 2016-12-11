@@ -6,7 +6,7 @@ public class SpawnGameObjects : MonoBehaviour {
 	public GameObject spawnPrefab;
 	public float minSecondsBetweenSpawning = 3.0f;
 	public float maxSecondsBetweenSpawning = 9.0f;
-    private float range = 0.1f;
+    private float range = 30f;
 	private float savedTime;
 	private float secondsBetweenSpawning;
 
@@ -31,11 +31,12 @@ public class SpawnGameObjects : MonoBehaviour {
 	{
         float x = Random.Range(-range,range);
         float z = Random.Range(-range, range);
+        print(x + "" + z);
         GameObject player = GameObject.FindGameObjectWithTag("Player");
         float playerX = player.transform.position.x;
         float playerY = player.transform.position.y;
         float playerZ = player.transform.position.z;
-        Vector3 pos = new Vector3(playerX, playerY, playerZ);
+        Vector3 pos = new Vector3(playerX+x, playerY, playerZ+z);
         GameObject clone = Instantiate(spawnPrefab, pos, player.transform.rotation) as GameObject;
                
 	}
