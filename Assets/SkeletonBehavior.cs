@@ -10,17 +10,27 @@ public class SkeletonBehavior : MonoBehaviour
     bool morri = false;
     bool ataquei = false;
     bool useiSkill = false;
-    private float hp;
+    public float hp;
     private int mana;
+    public int damage = 0;
     private int[] randomSkill = { 1, 1, 1, 2, 1, 1, 2, 1, 1 };
     public ThirdPersonUserControl PlayerScript;
     private GameObject healthBar;
+    private GameObject fimBatalha;
+
     // Use this for initialization
     void Start()
     {
+        if (battle)
+        {
+            fimBatalha = GameObject.FindGameObjectWithTag("Finish");
+            fimBatalha.SetActive(false);
+        }
         animator = GetComponent<Animator>();
         GameObject player = GameObject.FindGameObjectWithTag("Player");
+        print("hey olha esse bool: " + player == null);
         PlayerScript = player.GetComponent<ThirdPersonUserControl>();
+        print("hey2: " + PlayerScript == null);
         mana = 50;
         hp = 100f;
     }
@@ -52,34 +62,36 @@ public class SkeletonBehavior : MonoBehaviour
             }
 
             AnimatorStateInfo asi = animator.GetCurrentAnimatorStateInfo(0);
-            if(morri) print(asi.normalizedTime);
+
+
+
             if (hp <= 0 && !morri)
             {
+                turno = false;
                 animator.Play("Death");
-                battle = false;
-                PlayerScript.battle = false;
-                PlayerScript.turno = true;
+                print("tocando morte");
                 morri = true;
             }
-            else if (hp <= 0 && morri && asi.normalizedTime>=0.9) {
+            else if (hp <= 0 && morri && asi.normalizedTime>=0.9f) {
+                print("morri");
+                battle = false;
+                PlayerScript.battle = false;
                 DestroyObject(this);
                 Application.LoadLevel("DynamicLoader");
             }
 
             if (battle && turno)
             {
+                print("eh o turno dele e ele tem "+hp+" de vida");
                 if (mana < 10)
                 {
                     if (!ataquei)
                     {
                         animator.Play("Attack");
-                        print("Sobre a animacao: " + asi.IsName("Attack"));
-                        print("ataquei");
                         ataquei = true;
                     }else if(ataquei && !asi.IsName("Attack"))
                     {
-                        print("Sobre a animacao: "+ asi.IsName("Attack"));
-                        PlayerScript.decreaseHp(10);
+                        PlayerScript.decreaseHp(damage);
                         turno = false;
                         PlayerScript.turno = true;
                         PlayerScript.battle = true;
@@ -94,28 +106,24 @@ public class SkeletonBehavior : MonoBehaviour
                         if (randomSkill[skill] == 1)
                         {
                             animator.Play("Attack");
-                            print("Sobre a animacao: " + asi.IsName("Attack"));
-                            print("ataquei");
                             ataquei = true;
                         }
                         else
                         {
                             animator.Play("Skill");
-                            print("Sobre a animacao: " + asi.IsName("Skill"));
-                            print("usei skill");
                             useiSkill = true;
                         }
                     }
                     else if (ataquei && !asi.IsName("Attack"))
                     {
-                        PlayerScript.decreaseHp(10);
+                        PlayerScript.decreaseHp(damage);
                         PlayerScript.turno = true;
                         PlayerScript.battle = true;
                         turno = false;
                         ataquei = false;
                     }
                     else if (useiSkill && !asi.IsName("Skill")) {
-                        PlayerScript.decreaseHp(15);
+                        PlayerScript.decreaseHp(damage*1.5f);
                         mana -= 25;
                         PlayerScript.turno = true;
                         PlayerScript.battle = true;
@@ -152,6 +160,7 @@ public class SkeletonBehavior : MonoBehaviour
 
     void OnMouseDown()
     {
+        print("hey3: " + PlayerScript == null);
         PlayerScript.saveStats();
         Application.LoadLevel("Demo_Scene");
         DestroyObject(this);

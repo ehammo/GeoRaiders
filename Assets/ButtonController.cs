@@ -53,10 +53,14 @@ public class ButtonController : MonoBehaviour
         asi = EnemyScript.animator.GetCurrentAnimatorStateInfo(0);
 
         if (!asi.IsName("Damage") && damAnim) {
-            EnemyScript.turno = true;
+            if (EnemyScript.hp > 0)
+            {
+                EnemyScript.turno = true;
+                
+                Text turnText = (Camera.main.transform.FindChild("Canvas").FindChild("Turn").gameObject).GetComponent<Text>();
+                turnText.text = "His Turn";
+            }
             PlayerScript.turno = false;
-            Text turnText = (Camera.main.transform.FindChild("Canvas").FindChild("Turn").gameObject).GetComponent<Text>();
-            turnText.text = "His Turn";
             damAnim = false;
            }
 
