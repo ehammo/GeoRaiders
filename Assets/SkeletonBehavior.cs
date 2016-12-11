@@ -7,6 +7,9 @@ public class SkeletonBehavior : MonoBehaviour
     public Animator animator;
     public bool battle = false;
     public bool turno = false;
+    bool morri = false;
+    bool ataquei = false;
+    bool useiSkill = false;
     private float hp;
     private int mana;
     private int[] randomSkill = { 1, 1, 1, 2, 1, 1, 2, 1, 1 };
@@ -49,13 +52,16 @@ public class SkeletonBehavior : MonoBehaviour
             }
 
             AnimatorStateInfo asi = animator.GetCurrentAnimatorStateInfo(0);
-            
-            if (hp <= 0)
+            if(morri) print(asi.normalizedTime);
+            if (hp <= 0 && !morri)
             {
                 animator.Play("Death");
                 battle = false;
                 PlayerScript.battle = false;
                 PlayerScript.turno = true;
+                morri = true;
+            }
+            else if (hp <= 0 && morri && asi.normalizedTime>=0.9) {
                 DestroyObject(this);
                 Application.LoadLevel("DynamicLoader");
             }
@@ -64,35 +70,65 @@ public class SkeletonBehavior : MonoBehaviour
             {
                 if (mana < 10)
                 {
-                    PlayerScript.decreaseHp(10);
-                    animator.Play("Attack");
-                    turno = false;
-                    PlayerScript.turno = true;
-                    PlayerScript.battle = true;
-                }
+                    if (!ataquei)
+                    {
+                        animator.Play("Attack");
+                        print("Sobre a animacao: " + asi.IsName("Attack"));
+                        print("ataquei");
+                        ataquei = true;
+                    }else if(ataquei && !asi.IsName("Attack"))
+                    {
+                        print("Sobre a animacao: "+ asi.IsName("Attack"));
+                        PlayerScript.decreaseHp(10);
+                        turno = false;
+                        PlayerScript.turno = true;
+                        PlayerScript.battle = true;
+                        ataquei = false;
+                    }
+               }
                 else
                 {
-                    int skill = Random.Range(0, 8);
-                    if (randomSkill[skill] == 1)
+                    if (!ataquei && !useiSkill)
+                    {
+                        int skill = Random.Range(0, 8);
+                        if (randomSkill[skill] == 1)
+                        {
+                            animator.Play("Attack");
+                            print("Sobre a animacao: " + asi.IsName("Attack"));
+                            print("ataquei");
+                            ataquei = true;
+                        }
+                        else
+                        {
+                            animator.Play("Skill");
+                            print("Sobre a animacao: " + asi.IsName("Skill"));
+                            print("usei skill");
+                            useiSkill = true;
+                        }
+                    }
+                    else if (ataquei && !asi.IsName("Attack"))
                     {
                         PlayerScript.decreaseHp(10);
-                        animator.Play("Attack");
                         PlayerScript.turno = true;
                         PlayerScript.battle = true;
                         turno = false;
+                        ataquei = false;
                     }
-                    else
-                    {
-                        PlayerScript.decreaseHp(25);
-                        animator.Play("Skill");
+                    else if (useiSkill && !asi.IsName("Skill")) {
+                        PlayerScript.decreaseHp(15);
                         mana -= 25;
                         PlayerScript.turno = true;
                         PlayerScript.battle = true;
                         turno = false;
+                        useiSkill = false;
                     }
+                    
                 }
-                Text turnText = (Camera.main.transform.FindChild("Canvas").FindChild("Turn").gameObject).GetComponent<Text>();
-                turnText.text = "Your Turn";
+                if (!turno) {
+                    Text turnText = (Camera.main.transform.FindChild("Canvas").FindChild("Turn").gameObject).GetComponent<Text>();
+                    turnText.text = "Your Turn";
+                }
+                
             }
 
             //animator.Play("Idle");
@@ -104,12 +140,19 @@ public class SkeletonBehavior : MonoBehaviour
        foreach (RaycastHit hit in Physics.RaycastAll(touchRay)) {
            print("Object: " + hit.transform.name);
        }
-       */
+       
+
+            if (!anim.IsPlaying("Death") && !anim.IsPlaying("Attack") && !anim.IsPlaying("Skill"))
+            {
+                debugAnim = false;
+            }*/
+
         }
     }
 
     void OnMouseDown()
     {
+        PlayerScript.saveStats();
         Application.LoadLevel("Demo_Scene");
         DestroyObject(this);
     }

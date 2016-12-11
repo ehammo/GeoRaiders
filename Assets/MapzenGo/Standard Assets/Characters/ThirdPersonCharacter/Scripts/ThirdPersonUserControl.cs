@@ -9,6 +9,11 @@ namespace UnityStandardAssets.Characters.ThirdPerson
     [RequireComponent(typeof(ThirdPersonCharacter))]
     public class ThirdPersonUserControl : MonoBehaviour
     {
+        void OnMouseDown()
+        {
+            stats();
+        }
+
         private ThirdPersonCharacter m_Character; // A reference to the ThirdPersonCharacter on the object
         private Transform m_Cam;                  // A reference to the main camera in the scenes transform
         private Vector3 m_CamForward;             // The current forward direction of the camera
@@ -29,12 +34,12 @@ namespace UnityStandardAssets.Characters.ThirdPerson
 
 		float maxHealth = 100;
 		float maxMana = 100;
-		float maxDamage = 0;
+		public int maxDamage = 25;
 		float maxArmor = 0;
 
 		float currentHealth = 100;
         public float currentMana = 50;
-        public int currentDamage = 1;
+        public int currentDamage = 10;
 		float currentArmor = 0;
         float testing = 0;
 
@@ -49,7 +54,35 @@ namespace UnityStandardAssets.Characters.ThirdPerson
 
         private int[] battleSkill;
 
-		public void OnEnable()
+        public Gm gm;
+
+
+        public void saveStats() {
+            print("vou dar save");
+            gm.maxArmor = this.maxArmor;
+            gm.maxDamage = this.maxDamage;
+            gm.maxHealth = this.maxHealth;
+            gm.maxMana = this.maxMana;
+            gm.currentArmor = this.currentArmor;
+            gm.currentDamage = this.currentDamage;
+            gm.currentHealth = this.currentHealth;
+            gm.currentMana = this.currentMana;
+        }
+
+        public void setStats()
+        {
+            print("vou dar set");
+            this.maxArmor= gm.maxArmor;
+            this.maxDamage= gm.maxDamage;
+            this.maxHealth= gm.maxHealth;
+            this.maxMana= gm.maxMana;
+            this.currentArmor= gm.currentArmor;
+            this.currentDamage= gm.currentDamage;
+            this.currentHealth= gm.currentHealth;
+            this.currentMana= gm.currentMana;
+        }
+
+        public void OnEnable()
 		{
 			Inventory.ItemEquip += OnBackpack;
 			Inventory.UnEquipItem += UnEquipBackpack;
@@ -211,8 +244,8 @@ namespace UnityStandardAssets.Characters.ThirdPerson
 
 		public void OnGearItem(Item item)
 		{
-            print("ghue");
-			for (int i = 0; i < item.itemAttributes.Count; i++)
+            int t = maxDamage;
+            for (int i = 0; i < item.itemAttributes.Count; i++)
 			{
 				if (item.itemAttributes[i].attributeName == "Health")
 					maxHealth += item.itemAttributes[i].attributeValue;
@@ -226,7 +259,7 @@ namespace UnityStandardAssets.Characters.ThirdPerson
             currentArmor = maxArmor;
             currentMana = maxMana;
             currentHealth = maxHealth;
-            currentDamage = maxDamage;
+            currentDamage += Math.Abs(t-maxDamage);
             //if (HPMANACanvas != null)
             //{
             //    UpdateManaBar();
@@ -236,6 +269,7 @@ namespace UnityStandardAssets.Characters.ThirdPerson
 
         public void OnUnEquipItem(Item item)
 		{
+            int t = maxDamage;
 			for (int i = 0; i < item.itemAttributes.Count; i++)
 			{
 				if (item.itemAttributes[i].attributeName == "Health")
@@ -244,19 +278,26 @@ namespace UnityStandardAssets.Characters.ThirdPerson
 					maxMana -= item.itemAttributes[i].attributeValue;
 				if (item.itemAttributes[i].attributeName == "Armor")
 					maxArmor -= item.itemAttributes[i].attributeValue;
-				if (item.itemAttributes[i].attributeName == "Damage")
-					maxDamage -= item.itemAttributes[i].attributeValue;
-			}
-			//if (HPMANACanvas != null)
-			//{
-			//    UpdateManaBar();
-			//    UpdateHPBar();
-			//}
-		}
+                if (item.itemAttributes[i].attributeName == "Damage")
+                    maxDamage -= item.itemAttributes[i].attributeValue;
+            }
 
+            currentArmor = maxArmor;
+            currentMana = maxMana;
+            currentHealth = maxHealth;
+            currentDamage -= Math.Abs(t - maxDamage);
+            //if (HPMANACanvas != null)
+            //{
+            //    UpdateManaBar();
+            //    UpdateHPBar();
+            //}
+        }
 
         private void Start()
         {
+            print("hey");
+            gm = GameObject.FindGameObjectWithTag("GameController").GetComponent<Gm>();
+            setStats();
             // get the transform of the main camera
             if (Camera.main != null)
             {
@@ -279,8 +320,11 @@ namespace UnityStandardAssets.Characters.ThirdPerson
 				mainInventory = inventory.GetComponent<Inventory>();
 			if (characterSystem != null)
 				characterSystemInventory = characterSystem.GetComponent<Inventory>();
-		
-		}
+
+            maxDamage = 30;
+            currentDamage = 10;
+
+        }
 
 
 
@@ -289,11 +333,6 @@ namespace UnityStandardAssets.Characters.ThirdPerson
             if (!m_Jump)
             {
                 m_Jump = Input.GetButtonDown("Jump");
-            }
-
-            if (currentArmor != testing) {
-                print(currentArmor);
-                testing = currentArmor;
             }
 
             if (battle)
@@ -402,35 +441,38 @@ namespace UnityStandardAssets.Characters.ThirdPerson
         // Fixed update is called in sync with physics
         private void FixedUpdate()
         {
-            // read inputs
-            float h = Input.GetAxis("Horizontal");
-            float v = Input.GetAxis("Vertical");
-            bool crouch = Input.GetKey(KeyCode.C);
+            if (m_Character!=null)
+            {
+                // read inputs
+                float h = Input.GetAxis("Horizontal");
+                float v = Input.GetAxis("Vertical");
+                bool crouch = Input.GetKey(KeyCode.C);
 
-            // calculate move direction to pass to character
-            if (m_Cam != null)
-            {
-                // calculate camera relative direction to move:
-                m_CamForward = Vector3.Scale(m_Cam.forward, new Vector3(1, 0, 1)).normalized;
-                m_Move = v * m_CamForward + h * m_Cam.right;
-            }
-            else
-            {
-                // we use world-relative directions in the case of no main camera
-                m_Move = v * Vector3.forward + h * Vector3.right;
-            }
+                // calculate move direction to pass to character
+                if (m_Cam != null)
+                {
+                    // calculate camera relative direction to move:
+                    m_CamForward = Vector3.Scale(m_Cam.forward, new Vector3(1, 0, 1)).normalized;
+                    m_Move = v * m_CamForward + h * m_Cam.right;
+                }
+                else
+                {
+                    // we use world-relative directions in the case of no main camera
+                    m_Move = v * Vector3.forward + h * Vector3.right;
+                }
 #if !MOBILE_INPUT
-            // walk speed multiplier
-            if (Input.GetKey(KeyCode.LeftShift)) m_Move *= 0.5f;
+                // walk speed multiplier
+                if (Input.GetKey(KeyCode.LeftShift)) m_Move *= 0.5f;
 #endif
 
-            // pass all parameters to the character control script
-            m_Character.Move(m_Move, crouch, m_Jump);
-            //          Vector3 offset = new Vector3(m_Character.transform.position.x, m_Character.transform.position.y + 60.0f, m_Character.transform.position.z - 60.0f);
-            //          offset = Quaternion.AngleAxis(-h*4.0f,Vector3.forward)*offset;
-            //          m_Cam.position = m_Character.transform.localPosition + offset;
-            //          m_Cam.LookAt(m_Character.transform.position);
-            m_Jump = false;
+                // pass all parameters to the character control script
+                m_Character.Move(m_Move, crouch, m_Jump);
+                //          Vector3 offset = new Vector3(m_Character.transform.position.x, m_Character.transform.position.y + 60.0f, m_Character.transform.position.z - 60.0f);
+                //          offset = Quaternion.AngleAxis(-h*4.0f,Vector3.forward)*offset;
+                //          m_Cam.position = m_Character.transform.localPosition + offset;
+                //          m_Cam.LookAt(m_Character.transform.position);
+                m_Jump = false;
+            }
         }
 
         void setLimits() {
@@ -451,5 +493,13 @@ namespace UnityStandardAssets.Characters.ThirdPerson
                 this.currentHealth = 0;
             }
         }
+
+        void stats() {
+            String s = "Current Damage: " + currentDamage + "\nMaxDamage: " + maxDamage + "\nCurrentArmor: " + currentArmor;
+            print(s);
+        }
+
+
+
     }
 }
