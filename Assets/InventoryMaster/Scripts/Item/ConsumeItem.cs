@@ -8,7 +8,6 @@ using UnityStandardAssets.Characters.ThirdPerson;
 public class ConsumeItem : MonoBehaviour, IPointerDownHandler
 {
     public Item item;
-    private static Tooltip tooltip;
     public ItemType[] itemTypeOfSlot;
     public static EquipmentSystem eS;
     public GameObject duplication;
@@ -17,8 +16,6 @@ public class ConsumeItem : MonoBehaviour, IPointerDownHandler
     void Start()
     {
         item = GetComponent<ItemOnObject>().item;
-        if (GameObject.FindGameObjectWithTag("Tooltip") != null)
-            tooltip = GameObject.FindGameObjectWithTag("Tooltip").GetComponent<Tooltip>();
         if (GameObject.FindGameObjectWithTag("EquipmentSystem") != null)
 			eS = GameObject.FindGameObjectWithTag("Player").GetComponent<ThirdPersonUserControl>().characterSystem.GetComponent<EquipmentSystem>();
 
@@ -52,7 +49,6 @@ public class ConsumeItem : MonoBehaviour, IPointerDownHandler
                     cS.deleteItems(item);
                     CraftResultSlot result = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerInventory>().craftSystem.transform.GetChild(3).GetComponent<CraftResultSlot>();
                     result.temp = 0;
-                    tooltip.deactivateTooltip();
                     gearable = true;
                     GameObject.FindGameObjectWithTag("MainInventory").GetComponent<Inventory>().updateItemList();
                 }
@@ -154,16 +150,12 @@ public class ConsumeItem : MonoBehaviour, IPointerDownHandler
                         duplication.GetComponent<ItemOnObject>().item.itemValue--;
                         if (itemFromDup.itemValue <= 0)
                         {
-                            if (tooltip != null)
-                                tooltip.deactivateTooltip();
                             inventory.deleteItemFromInventory(item);
                             Destroy(duplication.gameObject); 
                         }
                     }
                     if (item.itemValue <= 0)
                     {
-                        if (tooltip != null)
-                            tooltip.deactivateTooltip();
                         inventory.deleteItemFromInventory(item);
                         Destroy(this.gameObject);                        
                     }
@@ -284,8 +276,6 @@ public class ConsumeItem : MonoBehaviour, IPointerDownHandler
                 duplication.GetComponent<ItemOnObject>().item.itemValue--;
                 if (itemFromDup.itemValue <= 0)
                 {
-                    if (tooltip != null)
-                        tooltip.deactivateTooltip();
                     inventory.deleteItemFromInventory(item);
                     Destroy(duplication.gameObject);
 
@@ -293,8 +283,6 @@ public class ConsumeItem : MonoBehaviour, IPointerDownHandler
             }
             if (item.itemValue <= 0)
             {
-                if (tooltip != null)
-                    tooltip.deactivateTooltip();
                 inventory.deleteItemFromInventory(item);
                 Destroy(this.gameObject); 
             }

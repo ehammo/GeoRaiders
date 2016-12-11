@@ -31,7 +31,6 @@ public class SpawnGameObjects : MonoBehaviour {
 	{
         float x = Random.Range(-range,range);
         float z = Random.Range(-range, range);
-        print(x + "" + z);
         GameObject player = GameObject.FindGameObjectWithTag("Player");
         float playerX = player.transform.position.x;
         float playerY = player.transform.position.y;

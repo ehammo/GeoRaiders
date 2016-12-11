@@ -30,6 +30,9 @@ namespace MapzenGo.Models
         protected Vector2d CenterTms; //tms tile coordinate
         protected Vector2d CenterInMercator; //this is like distance (meters) in mercator 
 
+        public TestLocationService gps;
+
+
         public virtual void Start()
         {
             if (MapMaterial == null)
@@ -38,7 +41,9 @@ namespace MapzenGo.Models
             InitFactories();
             InitLayers();
 
-            var v2 = GM.LatLonToMeters(Latitude, Longitude);
+            gps.calculatePos();
+            var v2 =  GM.LatLonToMeters(Latitude, Longitude);
+            //var v2 = GM.LatLonToMeters(gps.getLat(), gps.getLon());
             var tile = GM.MetersToTile(v2, Zoom);
 
             TileHost = new GameObject("Tiles").transform;

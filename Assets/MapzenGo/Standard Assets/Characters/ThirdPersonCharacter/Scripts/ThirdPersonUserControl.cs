@@ -14,6 +14,7 @@ namespace UnityStandardAssets.Characters.ThirdPerson
             stats();
         }
 
+        public TestLocationService gps;
         private ThirdPersonCharacter m_Character; // A reference to the ThirdPersonCharacter on the object
         private Transform m_Cam;                  // A reference to the main camera in the scenes transform
         private Vector3 m_CamForward;             // The current forward direction of the camera
@@ -454,11 +455,15 @@ namespace UnityStandardAssets.Characters.ThirdPerson
                     // calculate camera relative direction to move:
                     m_CamForward = Vector3.Scale(m_Cam.forward, new Vector3(1, 0, 1)).normalized;
                     m_Move = v * m_CamForward + h * m_Cam.right;
+                    //for mobile
+                    //m_Move = new Vector3(gps.getLonDesloc() * 72490.706f,0, gps.getLatDesloc()*77220.077f))
                 }
                 else
                 {
                     // we use world-relative directions in the case of no main camera
                     m_Move = v * Vector3.forward + h * Vector3.right;
+                    //for mobile
+                    //m_Move = new Vector3(gps.getLonDesloc() * 72490.706f, 0, gps.getLatDesloc() * 77220.077f))
                 }
 #if !MOBILE_INPUT
                 // walk speed multiplier
@@ -497,6 +502,8 @@ namespace UnityStandardAssets.Characters.ThirdPerson
         void stats() {
             String s = "Current Damage: " + currentDamage + "\nMaxDamage: " + maxDamage + "\nCurrentArmor: " + currentArmor;
             print(s);
+            print("CurrentArmor: " + currentArmor);
+            print("CurrentHealth: " + currentHealth);
         }
 
 
