@@ -18,7 +18,7 @@ namespace MapzenGo.Models
         [SerializeField] public float TileSize = 100;
 
         protected readonly string _mapzenUrl = "http://tile.mapzen.com/mapzen/vector/v1/{0}/{1}/{2}/{3}.{4}?api_key={5}";
-        [SerializeField] protected string _key = "vector-tiles-5sBcqh6"; //try getting your own key if this doesn't work
+        [SerializeField] protected string _key = "mapzen-yPU2ac6"; //try getting your own key if this doesn't work
         protected string _mapzenLayers;
         [SerializeField] protected Material MapMaterial;
         protected readonly string _mapzenFormat = "json";
@@ -121,6 +121,7 @@ namespace MapzenGo.Models
                     text => { ConstructTile(text, tile); }, //success
                     exp =>
                     {
+                        Debug.Log(_key);
                         Debug.Log("Error fetching -> " + url);
                         Debug.LogWarning("We've probably exceeded Mapzen query limit. You better get your own Api key! (https://mapzen.com/developers/)");
                     }); //failure
