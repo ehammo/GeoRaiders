@@ -10,7 +10,7 @@ public class SpawnGameObjects : MonoBehaviour {
     public float maxSecondsDisappear = 20.0f;
 
 
-    private float range = 30f;
+    private float range = 70f;
 	private float savedTime;
     private float savedTime2;
 
