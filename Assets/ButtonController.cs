@@ -36,11 +36,13 @@ public class ButtonController : MonoBehaviour
         if (turn&&myButton.name == "Skill1Btn" && !damAnim)
         {
             int damage = Random.Range(PlayerScript.currentDamage, PlayerScript.maxDamage);
+          //  player.GetComponent<Animator>().Play("skill1");
             EnemyScript.decreaseHp(damage);
             EnemyScript.animator.Play("Damage");
             damAnim = true;
         }
         else if (turn&&myButton.name == "Skill2Btn"&&PlayerScript.currentMana>=25 && !damAnim) {
+           // player.GetComponent<Animator>().Play("fireball");
             PlayerScript.BeginEffect(fireball);
             ///EnemyScript.decreaseHp(damage);
             PlayerScript.decreaseMana(25);

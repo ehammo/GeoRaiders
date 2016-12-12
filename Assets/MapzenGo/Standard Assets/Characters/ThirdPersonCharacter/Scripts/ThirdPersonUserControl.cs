@@ -469,14 +469,14 @@ namespace UnityStandardAssets.Characters.ThirdPerson
                     m_CamForward = Vector3.Scale(m_Cam.forward, new Vector3(1, 0, 1)).normalized;
                     m_Move = v * m_CamForward + h * m_Cam.right;
                     //for mobile
-                    m_Move = new Vector3(gps.getLonDesloc() * 150000.706f,0, gps.getLatDesloc()*150000.077f);
+                   // m_Move = new Vector3(gps.getLonDesloc() * 150000.706f,0, gps.getLatDesloc()*150000.077f);
                 }
                 else
                 {
                     // we use world-relative directions in the case of no main camera
                     m_Move = v * Vector3.forward + h * Vector3.right;
                     //for mobile
-                    m_Move = new Vector3(gps.getLonDesloc() * 150000.706f, 0, gps.getLatDesloc() * 150000.077f);
+                   // m_Move = new Vector3(gps.getLonDesloc() * 150000.706f, 0, gps.getLatDesloc() * 150000.077f);
                 }
 #if !MOBILE_INPUT
                 // walk speed multiplier
@@ -484,8 +484,8 @@ namespace UnityStandardAssets.Characters.ThirdPerson
 #endif
 
                 // pass all parameters to the character control script
-                //m_Character.Move(m_Move, crouch, m_Jump);
-                m_Character.transform.position += m_Move;
+                m_Character.Move(m_Move, crouch, m_Jump);
+                //m_Character.transform.position += m_Move;
                 //          Vector3 offset = new Vector3(m_Character.transform.position.x, m_Character.transform.position.y + 60.0f, m_Character.transform.position.z - 60.0f);
                 //          offset = Quaternion.AngleAxis(-h*4.0f,Vector3.forward)*offset;
                 //          m_Cam.position = m_Character.transform.localPosition + offset;
