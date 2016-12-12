@@ -33,12 +33,12 @@ public class SkeletonBehavior : MonoBehaviour
             sprite[2] = Resources.Load<Sprite>("Ac_Gloves07");
             sprite[3] = Resources.Load<Sprite>("W_Bow14");
 
-            victory = GameObject.FindGameObjectWithTag("endBattle");
+            victory = Camera.main.transform.FindChild("Canvas").FindChild("Text").gameObject;
             victory.GetComponent<Text>().text = "Victory!";
             victory.SetActive(false);
-            buttonContinue = GameObject.FindGameObjectWithTag("buttonContinue");
+            buttonContinue = Camera.main.transform.FindChild("Canvas").FindChild("Button").gameObject;
             buttonContinue.SetActive(false);
-            imageItem = GameObject.FindGameObjectWithTag("image").gameObject;
+            imageItem = Camera.main.transform.FindChild("Canvas").FindChild("Image").gameObject;
             imageItem.SetActive(false);
         }
         animator = GetComponent<Animator>();
@@ -61,8 +61,9 @@ public class SkeletonBehavior : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-       
-        if (battle)
+        AnimatorStateInfo asi = animator.GetCurrentAnimatorStateInfo(0);
+
+        if (battle&&!asi.IsName("Damage"))
         {
             if (healthBar == null) healthBar = (gameObject.transform.FindChild("EnemyHealth").FindChild("EnemyLife")).gameObject;
 
@@ -74,7 +75,6 @@ public class SkeletonBehavior : MonoBehaviour
                 healthBar.transform.localScale = temp;
             }
 
-            AnimatorStateInfo asi = animator.GetCurrentAnimatorStateInfo(0);
 
             if (hp <= 0 && !morri)
             {

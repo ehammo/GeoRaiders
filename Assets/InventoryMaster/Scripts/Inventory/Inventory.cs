@@ -95,6 +95,8 @@ public class Inventory : MonoBehaviour
 
     void Start()
     {
+
+
         if (transform.GetComponent<Hotbar>() == null)
             this.gameObject.SetActive(false);
 

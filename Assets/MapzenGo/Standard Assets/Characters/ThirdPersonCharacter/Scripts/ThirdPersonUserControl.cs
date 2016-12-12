@@ -9,38 +9,7 @@ namespace UnityStandardAssets.Characters.ThirdPerson
     [RequireComponent(typeof(ThirdPersonCharacter))]
     public class ThirdPersonUserControl : MonoBehaviour
     {
-        void OnMouseDown()
-        {
-            stats();
-            openInventory();
-            openEquipment();
-        }
-
-        public void openInventory()
-        {
-            if (!inventory.activeSelf)
-            {
-                mainInventory.openInventory();
-            }
-            else
-            {
-                mainInventory.closeInventory();
-            }
-
-        }
-
-        public void openEquipment()
-        {
-            if (!characterSystem.activeSelf)
-            {
-                characterSystemInventory.openInventory();
-            }
-            else
-            {
-                characterSystemInventory.closeInventory();
-            }
-
-        }
+       
 
         public TestLocationService gps;
         private ThirdPersonCharacter m_Character; // A reference to the ThirdPersonCharacter on the object
@@ -112,6 +81,9 @@ namespace UnityStandardAssets.Characters.ThirdPerson
             this.currentDamage= gm.currentDamage;
             this.currentHealth= gm.currentHealth;
             this.currentMana= gm.currentMana;
+            this.inventory = GameObject.FindGameObjectWithTag("Canvas").transform.FindChild("Panel - Inventory(Clone)").gameObject;
+            this. characterSystem = GameObject.FindGameObjectWithTag("Canvas").transform.FindChild("Panel - EquipmentSystem(Clone)").gameObject;
+
         }
 
         public void OnEnable()
@@ -546,6 +518,38 @@ namespace UnityStandardAssets.Characters.ThirdPerson
             print("CurrentHealth: " + currentHealth);
         }
 
+        void OnMouseDown()
+        {
+            stats();
+            openInventory();
+            openEquipment();
+        }
+
+        public void openInventory()
+        {
+            if (!inventory.activeSelf)
+            {
+                mainInventory.openInventory();
+            }
+            else
+            {
+                mainInventory.closeInventory();
+            }
+
+        }
+
+        public void openEquipment()
+        {
+            if (!characterSystem.activeSelf)
+            {
+                characterSystemInventory.openInventory();
+            }
+            else
+            {
+                characterSystemInventory.closeInventory();
+            }
+
+        }
 
 
     }
