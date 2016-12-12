@@ -3,6 +3,9 @@ using UnityEngine.UI;
 using UnityStandardAssets.Characters.ThirdPerson;
 using UnityEngine.EventSystems;
 using System.Collections.Generic;
+using UnityEngine.EventSystems;
+
+
 public class SkeletonBehavior : MonoBehaviour
 {
     public Animator animator;
@@ -14,6 +17,10 @@ public class SkeletonBehavior : MonoBehaviour
     public float hp;
     private int mana;
     public int damage = 10;
+
+    Vector2 touchPos;
+    public GraphicRaycaster GR;
+
 
     private int[] randomSkill = { 1, 1, 1, 2, 1, 1, 2, 1, 1 };
     public ThirdPersonUserControl PlayerScript;
@@ -55,7 +62,7 @@ public class SkeletonBehavior : MonoBehaviour
 
 
             item[0] = new Item("W_Gun001", 1, "", sprite[0],prefabItem, 1, ItemType.Weapon, "", weapon);
-            item[1] = new Item("A_Armour02", 2, "", sprite[3], prefabItem, 1, ItemType.Chest, "", chest);
+            item[1] = new Item("A_Armour02", 2, "", sprite[1], prefabItem, 1, ItemType.Chest, "", chest);
             item[2] = new Item("Ac_Gloves07", 3, "", sprite[2], prefabItem, 1, ItemType.Hands, "", hands);
             item[3] = new Item("A_Shoes05", 4, "", sprite[3], prefabItem, 1, ItemType.Shoe, "", shoe);
             item[4] = new Item("C_Elm04", 5, "", sprite[4], prefabItem, 1, ItemType.Head, "", head);
@@ -90,9 +97,10 @@ public class SkeletonBehavior : MonoBehaviour
     void Update()
     {
         AnimatorStateInfo asi = animator.GetCurrentAnimatorStateInfo(0);
-
-        if (battle&&!asi.IsName("Damage"))
+        
+        if (battle&&!asi.IsName("Damage")&& !animator.IsInTransition(0))
         {
+            
             if (healthBar == null) healthBar = (gameObject.transform.FindChild("EnemyHealth").FindChild("EnemyLife")).gameObject;
 
             if (healthBar.transform.localScale.x * 100 != hp)
@@ -110,16 +118,23 @@ public class SkeletonBehavior : MonoBehaviour
                 animator.Play("Death");
                 print("tocando morte");
                 morri = true;
-                int rr = Random.Range(0, 3);
-                imageItem.GetComponent<Image>().sprite = sprite[rr];
-                GameObject inventory = GameObject.FindGameObjectWithTag("Canvas").transform.FindChild("Panel - Inventory(Clone)").gameObject;
-                Inventory mainInventory = inventory.GetComponent<Inventory>();
-                mainInventory.addItemToInventory(item[rr]);
             }
-            else if (hp <= 0 && morri && asi.normalizedTime>=0.9f) {
+            else if (hp <= 0 && morri && asi.normalizedTime >= 0.9f)
+            {
+
+                int rr = Random.Range(0, 5);
                 victory.SetActive(true);
                 buttonContinue.SetActive(true);
-                imageItem.SetActive(true);
+
+                if (rr != 5)
+                {
+                    imageItem.SetActive(true);
+                    imageItem.GetComponent<Image>().sprite = sprite[rr];
+                    GameObject inventory = GameObject.FindGameObjectWithTag("Canvas").transform.FindChild("Panel - Inventory(Clone)").gameObject;
+                    Inventory mainInventory = inventory.GetComponent<Inventory>();
+                    mainInventory.addItemToInventory(item[rr]);
+                }
+
                 battle = false;
                 PlayerScript.battle = false;
             }
@@ -191,13 +206,39 @@ public class SkeletonBehavior : MonoBehaviour
         Application.LoadLevel("DynamicLoader");
     }
 
+    private bool IsPointerOverUIObject()
+    {
+        PointerEventData eventDataCurrentPosition = new PointerEventData(EventSystem.current);
+        eventDataCurrentPosition.position = new Vector2(Input.mousePosition.x, Input.mousePosition.y);
+        List<RaycastResult> results = new List<RaycastResult>();
+        EventSystem.current.RaycastAll(eventDataCurrentPosition, results);
+        return results.Count > 0;
+    }
 
     void OnMouseDown()
     {
-        if (!EventSystem.current.IsPointerOverGameObject()) {
+        //GR = GameObject.FindGameObjectWithTag("Canvas").gameObject.GetComponent<Canvas>();
+        if (!IsPointerOverUIObject() && !battle)
+        {
+            /* if (Input.touchCount > 0)
+             {
+                 if (Input.GetTouch(0).phase == TouchPhase.Began)
+                 {
+                     PointerEventData ped = new PointerEventData(null);
+                     ped.position = Input.GetTouch(0).position;
+                     List<RaycastResult> results = new List<RaycastResult>();
+                     GR.Raycast(ped, results);
+                     if (results.Count == 0)
+                     {
+                             PlayerScript.saveStats();
+                             DestroyObject(this);
+                             Application.LoadLevel("Demo_Scene");
+                     }
+                 }
+             } */
             PlayerScript.saveStats();
             DestroyObject(this);
             Application.LoadLevel("Demo_Scene");
         }
-           }
+    }
 }

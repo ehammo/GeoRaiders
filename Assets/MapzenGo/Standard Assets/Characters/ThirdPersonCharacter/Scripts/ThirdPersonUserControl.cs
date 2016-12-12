@@ -352,7 +352,8 @@ namespace UnityStandardAssets.Characters.ThirdPerson
             if (battle)
             {
                 setLimits();
-
+                mainInventory.closeInventory();
+                characterSystemInventory.closeInventory();
                 float hp = currentHealth;
                 float mana = currentMana;
 
@@ -526,17 +527,19 @@ namespace UnityStandardAssets.Characters.ThirdPerson
 
         public void openInventory()
         {
-            if (!inventory.activeSelf && !characterSystem.activeSelf)
+            if (!battle)
             {
-                mainInventory.openInventory();
-                characterSystemInventory.openInventory();
+                if (!inventory.activeSelf && !characterSystem.activeSelf)
+                {
+                    mainInventory.openInventory();
+                    characterSystemInventory.openInventory();
+                }
+                else
+                {
+                    mainInventory.closeInventory();
+                    characterSystemInventory.closeInventory();
+                }
             }
-            else
-            {
-                mainInventory.closeInventory();
-                characterSystemInventory.closeInventory();
-            }
-
         }
     }
 }
