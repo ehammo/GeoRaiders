@@ -12,6 +12,34 @@ namespace UnityStandardAssets.Characters.ThirdPerson
         void OnMouseDown()
         {
             stats();
+            openInventory();
+            openEquipment();
+        }
+
+        public void openInventory()
+        {
+            if (!inventory.activeSelf)
+            {
+                mainInventory.openInventory();
+            }
+            else
+            {
+                mainInventory.closeInventory();
+            }
+
+        }
+
+        public void openEquipment()
+        {
+            if (!characterSystem.activeSelf)
+            {
+                characterSystemInventory.openInventory();
+            }
+            else
+            {
+                characterSystemInventory.closeInventory();
+            }
+
         }
 
         public TestLocationService gps;

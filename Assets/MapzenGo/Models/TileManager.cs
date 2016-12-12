@@ -6,6 +6,7 @@ using MapzenGo.Models.Factories;
 using MapzenGo.Models.Plugins;
 using UniRx;
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace MapzenGo.Models
 {
@@ -31,8 +32,8 @@ namespace MapzenGo.Models
         protected Vector2d CenterInMercator; //this is like distance (meters) in mercator 
 
         public TestLocationService gps;
-
-
+        Text testando;
+        int count;
         public virtual void Start()
         {
             if (MapMaterial == null)
@@ -41,27 +42,40 @@ namespace MapzenGo.Models
             InitFactories();
             InitLayers();
 
+            GameObject canvas = GameObject.FindGameObjectWithTag("testando").gameObject;
+            testando = canvas.transform.FindChild("Text").GetComponent<Text>();
+
             gps.calculatePos();
-            var v2 =  GM.LatLonToMeters(Latitude, Longitude);
-            //var v2 = GM.LatLonToMeters(gps.getLat(), gps.getLon());
-            var tile = GM.MetersToTile(v2, Zoom);
-
-            TileHost = new GameObject("Tiles").transform;
-            TileHost.SetParent(transform, false);
-
-            Tiles = new Dictionary<Vector2d, Tile>();
-            CenterTms = tile;
-            CenterInMercator = GM.TileBounds(CenterTms, Zoom).Center;
-
-            LoadTiles(CenterTms, CenterInMercator);
-
-            var rect = GM.TileBounds(CenterTms, Zoom);
-            transform.localScale = Vector3.one * (float)(TileSize / rect.Width);
+            count = 0;
         }
 
         public virtual void Update()
         {
-            
+            if (count < 2) {
+
+                gps.calculatePos();
+                Latitude = gps.lat;
+                Longitude = gps.lon;
+
+
+                testando.text = ("Location: " + Latitude + " " + Longitude);
+
+                var v2 = GM.LatLonToMeters(Latitude, Longitude);
+                var tile = GM.MetersToTile(v2, Zoom);
+
+                TileHost = new GameObject("Tiles").transform;
+                TileHost.SetParent(transform, false);
+
+                Tiles = new Dictionary<Vector2d, Tile>();
+                CenterTms = tile;
+                CenterInMercator = GM.TileBounds(CenterTms, Zoom).Center;
+
+                LoadTiles(CenterTms, CenterInMercator);
+
+                var rect = GM.TileBounds(CenterTms, Zoom);
+                transform.localScale = Vector3.one * (float)(TileSize / rect.Width);
+            }
+            count++;
         }
 
         private void InitLayers()

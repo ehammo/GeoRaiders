@@ -1,6 +1,4 @@
 ﻿using UnityEngine;
-using System.Collections;
-
 using UnityEngine.UI;
 
 public class TestLocationService : MonoBehaviour
@@ -13,13 +11,13 @@ public class TestLocationService : MonoBehaviour
     public float lon;
     public float prevLat;
     public float prevLon;
-
+    Text testando;
     public void calculatePos() {
         // First, check if user has location service enabled
         if (!Input.location.isEnabledByUser)
         {
             //yield break;
-            //debugLogText.text = "gps nao ligado";
+         //   testando.text = "gps nao ligado";
         }
         // Start service before querying location
         Input.location.Start();
@@ -29,7 +27,7 @@ public class TestLocationService : MonoBehaviour
         while (Input.location.status == LocationServiceStatus.Initializing && maxWait > 0)
         {
             //yield return new WaitForSeconds(1);
-            //debugLogText.text = "gps inicializando";
+          //  testando.text = "gps inicializando";
             maxWait--;
         }
 
@@ -44,7 +42,7 @@ public class TestLocationService : MonoBehaviour
         if (Input.location.status == LocationServiceStatus.Failed)
         {
             print("Unable to determine device location");
-            //debugLogText.text = "gps falhou";
+           // testando.text = "gps falhou";
             //yield break;
         }
         else
@@ -56,6 +54,7 @@ public class TestLocationService : MonoBehaviour
             //latitudeText.text = "" + Input.location.lastData.latitude;
             lon = Input.location.lastData.longitude;
             //longitudeText.text = "" + Input.location.lastData.longitude;
+           // testando.text = ("Location: " + lat + " " + lon );
             //Debug.Log("Location: " + Input.location.lastData.latitude + " " + Input.location.lastData.longitude + " " + Input.location.lastData.altitude + " " + Input.location.lastData.horizontalAccuracy + " " + Input.location.lastData.timestamp);
 
             //debugLogText.text = "gps funcionou";
@@ -68,10 +67,16 @@ public class TestLocationService : MonoBehaviour
     //IEnumerator Start()
     void Start() {
         Debug.Log("startei gps");
+        /*
+        //var v2 =  GM.LatLonToMeters(Latitude, Longitude);
+        GameObject canvas = GameObject.FindGameObjectWithTag("testando").gameObject;
+        testando = canvas.transform.FindChild("Text").GetComponent<Text>();
+
         calculatePos(); 
+        */
     }
 
-    //void Update() { calculatePos(); }
+   // void Update() { callUpdate(); }
     public void callUpdate() {
         prevLat = lat;
         prevLon = lon;

@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
 using UnityStandardAssets.Characters.ThirdPerson;
+using UnityEngine.EventSystems;
 
 public class SkeletonBehavior : MonoBehaviour
 {
@@ -160,9 +161,11 @@ public class SkeletonBehavior : MonoBehaviour
 
     void OnMouseDown()
     {
-        print("hey3: " + PlayerScript == null);
-        PlayerScript.saveStats();
-        Application.LoadLevel("Demo_Scene");
-        DestroyObject(this);
-    }
+        if (!EventSystem.current.IsPointerOverGameObject()) {
+            print("hey3: " + PlayerScript == null);
+            PlayerScript.saveStats();
+            Application.LoadLevel("Demo_Scene");
+            DestroyObject(this);
+        }
+           }
 }
