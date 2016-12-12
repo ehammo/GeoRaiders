@@ -2,7 +2,7 @@
 using UnityEngine.UI;
 using UnityStandardAssets.Characters.ThirdPerson;
 using UnityEngine.EventSystems;
-
+using System.Collections.Generic;
 public class SkeletonBehavior : MonoBehaviour
 {
     public Animator animator;
@@ -23,15 +23,43 @@ public class SkeletonBehavior : MonoBehaviour
     private GameObject imageItem;
     private Sprite[] sprite;
     // Use this for initialization
+    public GameObject prefabItem;
+    Item[] item;
     void Start()
     {
         if (battle)
         {
-            sprite = new Sprite[4];
+            sprite = new Sprite[5];
             sprite[0] = Resources.Load<Sprite>("W_Gun001");
             sprite[1] = Resources.Load<Sprite>("A_Armour02");
             sprite[2] = Resources.Load<Sprite>("Ac_Gloves07");
-            sprite[3] = Resources.Load<Sprite>("W_Bow14");
+            sprite[3] = Resources.Load<Sprite>("A_Shoes05");
+            sprite[4] = Resources.Load<Sprite>("C_Elm04");
+
+
+            item = new Item[5];
+
+            List<ItemAttribute> weapon = new List<ItemAttribute>();
+            weapon.Add(new ItemAttribute("Damage", 10));
+            List<ItemAttribute> chest = new List<ItemAttribute>();
+            chest.Add(new ItemAttribute("Armour", 10));
+            chest.Add(new ItemAttribute("Health", 10));
+            List<ItemAttribute> hands = new List<ItemAttribute>();
+            hands.Add(new ItemAttribute("Mana", 10));
+            hands.Add(new ItemAttribute("Armour", 5));
+            List<ItemAttribute> shoe = new List<ItemAttribute>();
+            shoe.Add(new ItemAttribute("Armour", 5));
+            List<ItemAttribute> head = new List<ItemAttribute>();
+            head.Add(new ItemAttribute("Mana", 10));
+            head.Add(new ItemAttribute("Armour", 10));
+
+
+            item[0] = new Item("W_Gun001", 1, "", sprite[0],prefabItem, 1, ItemType.Weapon, "", weapon);
+            item[1] = new Item("A_Armour02", 2, "", sprite[3], prefabItem, 1, ItemType.Chest, "", chest);
+            item[2] = new Item("Ac_Gloves07", 3, "", sprite[2], prefabItem, 1, ItemType.Hands, "", hands);
+            item[3] = new Item("A_Shoes05", 4, "", sprite[3], prefabItem, 1, ItemType.Shoe, "", shoe);
+            item[4] = new Item("C_Elm04", 5, "", sprite[4], prefabItem, 1, ItemType.Head, "", head);
+
 
             victory = Camera.main.transform.FindChild("Canvas").FindChild("Text").gameObject;
             victory.GetComponent<Text>().text = "Victory!";
@@ -84,7 +112,9 @@ public class SkeletonBehavior : MonoBehaviour
                 morri = true;
                 int rr = Random.Range(0, 3);
                 imageItem.GetComponent<Image>().sprite = sprite[rr];
-
+                GameObject inventory = GameObject.FindGameObjectWithTag("Canvas").transform.FindChild("Panel - Inventory(Clone)").gameObject;
+                Inventory mainInventory = inventory.GetComponent<Inventory>();
+                mainInventory.addItemToInventory(item[rr]);
             }
             else if (hp <= 0 && morri && asi.normalizedTime>=0.9f) {
                 victory.SetActive(true);

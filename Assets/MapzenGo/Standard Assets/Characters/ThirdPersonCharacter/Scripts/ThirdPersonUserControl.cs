@@ -522,35 +522,21 @@ namespace UnityStandardAssets.Characters.ThirdPerson
         {
             stats();
             openInventory();
-            openEquipment();
         }
 
         public void openInventory()
         {
-            if (!inventory.activeSelf)
+            if (!inventory.activeSelf && !characterSystem.activeSelf)
             {
                 mainInventory.openInventory();
-            }
-            else
-            {
-                mainInventory.closeInventory();
-            }
-
-        }
-
-        public void openEquipment()
-        {
-            if (!characterSystem.activeSelf)
-            {
                 characterSystemInventory.openInventory();
             }
             else
             {
+                mainInventory.closeInventory();
                 characterSystemInventory.closeInventory();
             }
 
         }
-
-
     }
 }
