@@ -604,6 +604,28 @@ public class Inventory : MonoBehaviour
 
     }
 
+	public void addItemToInventory(Item it)
+	{
+		for (int i = 0; i < SlotContainer.transform.childCount; i++)
+		{
+			if (SlotContainer.transform.GetChild(i).childCount == 0)
+			{
+				GameObject item = (GameObject)Instantiate(prefabItem);
+				item.GetComponent<ItemOnObject>().item = it;
+				item.transform.SetParent(SlotContainer.transform.GetChild(i));
+				item.GetComponent<RectTransform>().localPosition = Vector3.zero;
+				item.transform.GetChild(0).GetComponent<Image>().sprite = item.GetComponent<ItemOnObject>().item.itemIcon;
+				item.GetComponent<ItemOnObject>().item.indexItemInList = ItemsInInventory.Count - 1;
+				break;
+			}
+		}
+
+		stackableSettings();
+		updateItemList();
+
+	}
+
+
     public GameObject addItemToInventory(int id, int value)
     {
         for (int i = 0; i < SlotContainer.transform.childCount; i++)
