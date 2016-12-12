@@ -13,25 +13,37 @@ public class SkeletonBehavior : MonoBehaviour
     bool useiSkill = false;
     public float hp;
     private int mana;
-    public int damage = 0;
+    public int damage = 10;
+
     private int[] randomSkill = { 1, 1, 1, 2, 1, 1, 2, 1, 1 };
     public ThirdPersonUserControl PlayerScript;
     private GameObject healthBar;
-    private GameObject fimBatalha;
-
+    private GameObject victory;
+    private GameObject buttonContinue;
+    private GameObject imageItem;
+    private Sprite[] sprite;
     // Use this for initialization
     void Start()
     {
         if (battle)
         {
-            fimBatalha = GameObject.FindGameObjectWithTag("Finish");
-            fimBatalha.SetActive(false);
+            sprite = new Sprite[4];
+            sprite[0] = Resources.Load<Sprite>("W_Gun001");
+            sprite[1] = Resources.Load<Sprite>("A_Armour02");
+            sprite[2] = Resources.Load<Sprite>("Ac_Gloves07");
+            sprite[3] = Resources.Load<Sprite>("W_Bow14");
+
+            victory = GameObject.FindGameObjectWithTag("endBattle");
+            victory.GetComponent<Text>().text = "Victory!";
+            victory.SetActive(false);
+            buttonContinue = GameObject.FindGameObjectWithTag("buttonContinue");
+            buttonContinue.SetActive(false);
+            imageItem = GameObject.FindGameObjectWithTag("image").gameObject;
+            imageItem.SetActive(false);
         }
         animator = GetComponent<Animator>();
         GameObject player = GameObject.FindGameObjectWithTag("Player");
-        print("hey olha esse bool: " + player == null);
         PlayerScript = player.GetComponent<ThirdPersonUserControl>();
-        print("hey2: " + PlayerScript == null);
         mana = 50;
         hp = 100f;
     }
@@ -64,21 +76,22 @@ public class SkeletonBehavior : MonoBehaviour
 
             AnimatorStateInfo asi = animator.GetCurrentAnimatorStateInfo(0);
 
-
-
             if (hp <= 0 && !morri)
             {
                 turno = false;
                 animator.Play("Death");
                 print("tocando morte");
                 morri = true;
+                int rr = Random.Range(0, 3);
+                imageItem.GetComponent<Image>().sprite = sprite[rr];
+
             }
             else if (hp <= 0 && morri && asi.normalizedTime>=0.9f) {
-                print("morri");
+                victory.SetActive(true);
+                buttonContinue.SetActive(true);
+                imageItem.SetActive(true);
                 battle = false;
                 PlayerScript.battle = false;
-                DestroyObject(this);
-                Application.LoadLevel("DynamicLoader");
             }
 
             if (battle && turno)
@@ -139,33 +152,22 @@ public class SkeletonBehavior : MonoBehaviour
                 }
                 
             }
-
-            //animator.Play("Idle");
-
-            /*
-       Touch touch = Input.touches[0];
-       Ray touchRay = Camera.main.ScreenPointToRay(touch.position);
-
-       foreach (RaycastHit hit in Physics.RaycastAll(touchRay)) {
-           print("Object: " + hit.transform.name);
-       }
-       
-
-            if (!anim.IsPlaying("Death") && !anim.IsPlaying("Attack") && !anim.IsPlaying("Skill"))
-            {
-                debugAnim = false;
-            }*/
-
         }
     }
+
+    public void Morre()
+    {
+        DestroyObject(this);
+        Application.LoadLevel("DynamicLoader");
+    }
+
 
     void OnMouseDown()
     {
         if (!EventSystem.current.IsPointerOverGameObject()) {
-            print("hey3: " + PlayerScript == null);
             PlayerScript.saveStats();
-            Application.LoadLevel("Demo_Scene");
             DestroyObject(this);
+            Application.LoadLevel("Demo_Scene");
         }
            }
 }

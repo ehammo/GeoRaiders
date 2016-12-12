@@ -84,7 +84,10 @@ namespace UnityStandardAssets.Characters.ThirdPerson
         private int[] battleSkill;
 
         public Gm gm;
-
+        private GameObject defeat;
+        private GameObject buttonContinue;
+        private GameObject imageItem;
+        private Sprite[] sprite;
 
         public void saveStats() {
             print("vou dar save");
@@ -353,6 +356,16 @@ namespace UnityStandardAssets.Characters.ThirdPerson
             maxDamage = 30;
             currentDamage = 10;
 
+            if (battle) {
+                defeat = GameObject.FindGameObjectWithTag("endBattle");
+                defeat.GetComponent<Text>().text = "Defeat!";
+                defeat.SetActive(false);
+                buttonContinue = GameObject.FindGameObjectWithTag("buttonContinue");
+                buttonContinue.SetActive(false);
+                imageItem = GameObject.FindGameObjectWithTag("image").gameObject;
+                imageItem.SetActive(false);
+            }
+
         }
 
 
@@ -397,11 +410,10 @@ namespace UnityStandardAssets.Characters.ThirdPerson
 
                 if (hp <= 0)
                 {
-                    //Aparecer voce perdeu de alguma forma
+                    defeat.SetActive(true);
+                    buttonContinue.SetActive(true);
                     battle = false;
                     EnemyScript.battle = false;
-                    DestroyObject(this);
-                    Application.LoadLevel("DynamicLoader");
                 }
 
             }
