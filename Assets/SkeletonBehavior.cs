@@ -16,11 +16,7 @@ public class SkeletonBehavior : MonoBehaviour
     bool useiSkill = false;
     public float hp;
     private int mana;
-    public int damage = 10;
-
-    Vector2 touchPos;
-    public GraphicRaycaster GR;
-
+    private int damage = 10;
 
     private int[] randomSkill = { 1, 1, 1, 2, 1, 1, 2, 1, 1 };
     public ThirdPersonUserControl PlayerScript;
@@ -41,7 +37,7 @@ public class SkeletonBehavior : MonoBehaviour
             sprite[1] = Resources.Load<Sprite>("A_Armour02");
             sprite[2] = Resources.Load<Sprite>("Ac_Gloves07");
             sprite[3] = Resources.Load<Sprite>("A_Shoes05");
-            sprite[4] = Resources.Load<Sprite>("C_Elm04");
+            sprite[4] = Resources.Load<Sprite>("C_Elm03");
 
 
             item = new Item[5];
@@ -65,7 +61,7 @@ public class SkeletonBehavior : MonoBehaviour
             item[1] = new Item("A_Armour02", 2, "", sprite[1], prefabItem, 1, ItemType.Chest, "", chest);
             item[2] = new Item("Ac_Gloves07", 3, "", sprite[2], prefabItem, 1, ItemType.Hands, "", hands);
             item[3] = new Item("A_Shoes05", 4, "", sprite[3], prefabItem, 1, ItemType.Shoe, "", shoe);
-            item[4] = new Item("C_Elm04", 5, "", sprite[4], prefabItem, 1, ItemType.Head, "", head);
+            item[4] = new Item("C_Elm03", 5, "", sprite[4], prefabItem, 1, ItemType.Head, "", head);
 
 
             victory = Camera.main.transform.FindChild("Canvas").FindChild("Text").gameObject;
@@ -86,6 +82,7 @@ public class SkeletonBehavior : MonoBehaviour
     public void decreaseHp(float val)
     {
         this.hp -= val;
+        print("hp do esqueleto " + hp);
     }
 
     public void increaseHp(float val)
@@ -213,6 +210,12 @@ public class SkeletonBehavior : MonoBehaviour
         List<RaycastResult> results = new List<RaycastResult>();
         EventSystem.current.RaycastAll(eventDataCurrentPosition, results);
         return results.Count > 0;
+    }
+
+    void OnCollisionEnter(Collision col)
+    {
+        int damage = Random.Range(PlayerScript.maxDamage - 10, PlayerScript.maxDamage);
+        decreaseHp(damage);
     }
 
     void OnMouseDown()

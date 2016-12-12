@@ -9,17 +9,20 @@ public class ButtonController : MonoBehaviour
     ThirdPersonUserControl PlayerScript;
     bool damAnim=false;
     AnimatorStateInfo asi;
-
+    public GameObject fireball;
+    
+    GameObject player;
     void Awake()
     {
         myButton = GetComponent<Button>(); // <-- you get access to the button component here
 
-        GameObject player = GameObject.FindGameObjectWithTag("Player");
+        player = GameObject.FindGameObjectWithTag("Player");
         PlayerScript = player.GetComponent<ThirdPersonUserControl>();
         GameObject enemy = GameObject.FindGameObjectWithTag("Enemy");
         EnemyScript = enemy.GetComponent<SkeletonBehavior>();
         Animator animator = enemy.GetComponent<Animator>();
         asi = animator.GetCurrentAnimatorStateInfo(0);
+
 
         myButton.onClick.AddListener(() => { myFunctionForOnClickEvent(); });  // <-- you assign a method to the button OnClick event here
    
@@ -38,10 +41,10 @@ public class ButtonController : MonoBehaviour
             damAnim = true;
         }
         else if (turn&&myButton.name == "Skill2Btn"&&PlayerScript.currentMana>=25 && !damAnim) {
-            int damage = Random.Range(PlayerScript.maxDamage-10, PlayerScript.maxDamage);
-            EnemyScript.decreaseHp(damage);
+            PlayerScript.BeginEffect(fireball);
+            ///EnemyScript.decreaseHp(damage);
             PlayerScript.decreaseMana(25);
-            EnemyScript.animator.Play("Damage");
+            EnemyScript.animator.Play("Knockback");
             damAnim = true;
         }
 
@@ -65,5 +68,8 @@ public class ButtonController : MonoBehaviour
            }
 
     }
+
+
+
 
 }

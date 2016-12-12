@@ -348,7 +348,6 @@ namespace UnityStandardAssets.Characters.ThirdPerson
             {
                 m_Jump = Input.GetButtonDown("Jump");
             }
-
             if (battle)
             {
                 setLimits();
@@ -356,7 +355,6 @@ namespace UnityStandardAssets.Characters.ThirdPerson
                 characterSystemInventory.closeInventory();
                 float hp = currentHealth;
                 float mana = currentMana;
-
                 if (healthBar == null || ManaBar == null)
                 {
                     healthBar = (Camera.main.transform.FindChild("Canvas").FindChild("PlayerHealth").FindChild("PlayerLife")).gameObject;
@@ -365,6 +363,7 @@ namespace UnityStandardAssets.Characters.ThirdPerson
 
                 if (healthBar.transform.localScale.x * 100 != hp)
                 {
+                    print("entrei no id da vida");
                     Vector3 temp = healthBar.transform.localScale;
                     temp.x = hp / 100f;
                     if (hp / 100 < 0) temp.x = 0;
@@ -434,6 +433,7 @@ namespace UnityStandardAssets.Characters.ThirdPerson
             {
                 this.currentHealth -= (val - this.currentArmor);
                 this.currentArmor -= val;
+                if (this.currentArmor < 0) this.currentArmor = 0;
             }
         }
 
@@ -469,14 +469,14 @@ namespace UnityStandardAssets.Characters.ThirdPerson
                     m_CamForward = Vector3.Scale(m_Cam.forward, new Vector3(1, 0, 1)).normalized;
                     m_Move = v * m_CamForward + h * m_Cam.right;
                     //for mobile
-                    //m_Move = new Vector3(gps.getLonDesloc() * 72490.706f,0, gps.getLatDesloc()*77220.077f))
+                    m_Move = new Vector3(gps.getLonDesloc() * 150000.706f,0, gps.getLatDesloc()*150000.077f);
                 }
                 else
                 {
                     // we use world-relative directions in the case of no main camera
                     m_Move = v * Vector3.forward + h * Vector3.right;
                     //for mobile
-                    //m_Move = new Vector3(gps.getLonDesloc() * 72490.706f, 0, gps.getLatDesloc() * 77220.077f))
+                    m_Move = new Vector3(gps.getLonDesloc() * 150000.706f, 0, gps.getLatDesloc() * 150000.077f);
                 }
 #if !MOBILE_INPUT
                 // walk speed multiplier
@@ -484,7 +484,8 @@ namespace UnityStandardAssets.Characters.ThirdPerson
 #endif
 
                 // pass all parameters to the character control script
-                m_Character.Move(m_Move, crouch, m_Jump);
+                //m_Character.Move(m_Move, crouch, m_Jump);
+                m_Character.transform.position += m_Move;
                 //          Vector3 offset = new Vector3(m_Character.transform.position.x, m_Character.transform.position.y + 60.0f, m_Character.transform.position.z - 60.0f);
                 //          offset = Quaternion.AngleAxis(-h*4.0f,Vector3.forward)*offset;
                 //          m_Cam.position = m_Character.transform.localPosition + offset;
@@ -517,6 +518,62 @@ namespace UnityStandardAssets.Characters.ThirdPerson
             print(s);
             print("CurrentArmor: " + currentArmor);
             print("CurrentHealth: " + currentHealth);
+        }
+
+
+        public void BeginEffect(GameObject fireball)
+        {
+            Vector3 pos;
+            DigitalRuby.PyroParticles.FireBaseScript currentPrefabScript;
+            float yRot = transform.rotation.eulerAngles.y;
+            Vector3 forwardY = Quaternion.Euler(0.0f, yRot, 0.0f) * Vector3.forward;
+            Vector3 forward = transform.forward;
+            Vector3 right = transform.right;
+            Vector3 up = transform.up;
+            Quaternion rotation = Quaternion.identity;
+            GameObject currentPrefabObject = GameObject.Instantiate(fireball);
+            currentPrefabScript = currentPrefabObject.GetComponent<DigitalRuby.PyroParticles.FireConstantBaseScript>();
+            if (currentPrefabScript == null)
+            {
+                // temporary effect, like a fireball
+                currentPrefabScript = currentPrefabObject.GetComponent<DigitalRuby.PyroParticles.FireBaseScript>();
+                if (currentPrefabScript.IsProjectile)
+                {
+                    // set the start point near the player
+                    rotation = transform.rotation;
+                    pos = transform.position + forward;
+                    pos.x = pos.x - 1;
+                    pos.y = pos.y + 1;
+                    pos.z = 47;
+                    //pos.z = 47;
+                    //pos.y = -5;
+                    //  pos = transform.position + forward + right + up;
+                }
+                else
+                {
+                    // set the start point in front of the player a ways
+                    pos = transform.position + (forwardY * 10.0f);
+                }
+            }
+            else
+            {
+                // set the start point in front of the player a ways, rotated the same way as the player
+                pos = transform.position + (forwardY * 5.0f);
+                rotation = transform.rotation;
+                pos.y = 0.0f;
+            }
+
+
+            DigitalRuby.PyroParticles.FireProjectileScript projectileScript = currentPrefabObject.GetComponentInChildren<DigitalRuby.PyroParticles.FireProjectileScript>();
+            if (projectileScript != null)
+            {
+                // make sure we don't collide with other friendly layers
+                projectileScript.ProjectileCollisionLayers &= (~UnityEngine.LayerMask.NameToLayer("FriendlyLayer"));
+            }
+
+
+            currentPrefabObject.transform.position = pos;
+            currentPrefabObject.transform.rotation = rotation;
         }
 
         void OnMouseDown()
